@@ -1,216 +1,162 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
-export default function App() {
-  const [patients, setPatients] = useState([]);
-  const [doctors, setDoctors] = useState([]);
-  const [appointments, setAppointments] = useState([]);
-  const [bills, setBills] = useState([]);
-  const [activeTab, setActiveTab] = useState("patients");
+function App() {
+  const [activeMenu, setActiveMenu] = useState("Appointments");
+  const [activeTab, setActiveTab] = useState("Today");
 
-  const [formData, setFormData] = useState({});
-  const [showForm, setShowForm] = useState(false);
-
-  const openForm = (type, item = null) => {
-    setFormData({ type, item });
-    setShowForm(true);
+  const initialData = {
+    Appointments: [
+      { id: 1, patient: "John Doe", doctor: "Dr. Smith", time: "10:00 AM" },
+      { id: 2, patient: "Jane Doe", doctor: "Dr. Brown", time: "11:00 AM" },
+      { id: 3, patient: "Alice", doctor: "Dr. Smith", time: "12:00 PM" },
+    ],
+    Patients: [
+      { id: 1, name: "John Doe", age: 30, contact: "123-456-7890" },
+      { id: 2, name: "Jane Doe", age: 25, contact: "234-567-8901" },
+      { id: 3, name: "Alice", age: 40, contact: "345-678-9012" },
+    ],
+    Doctors: [
+      { id: 1, name: "Dr. Smith", specialty: "Cardiology", patients: 30 },
+      { id: 2, name: "Dr. Brown", specialty: "Dermatology", patients: 25 },
+      { id: 3, name: "Dr. Lee", specialty: "Pediatrics", patients: 20 },
+    ],
+    Bills: [
+      { id: 1, patient: "John Doe", amount: "$200", status: "Paid" },
+      { id: 2, patient: "Jane Doe", amount: "$150", status: "Pending" },
+      { id: 3, patient: "Alice", amount: "$300", status: "Paid" },
+    ],
+    Reports: [
+      { id: 1, title: "Monthly Revenue", date: "2025-11-01" },
+      { id: 2, title: "Patient Growth", date: "2025-11-01" },
+    ],
   };
 
-  const closeForm = () => {
-    setFormData({});
-    setShowForm(false);
+  const [data, setData] = useState(initialData);
+
+  // Card counts
+  const [appointmentsCount, setAppointmentsCount] = useState(data.Appointments.length);
+  const [patientsCount, setPatientsCount] = useState(data.Patients.length);
+  const [revenue, setRevenue] = useState(8500);
+
+  // Simulate dynamic updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAppointmentsCount(data.Appointments.length + Math.floor(Math.random() * 3));
+      setPatientsCount(data.Patients.length + Math.floor(Math.random() * 3));
+      setRevenue(8500 + Math.floor(Math.random() * 1000));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [data]);
+
+  // Handle delete
+  const handleDelete = (id) => {
+    const updated = data[activeMenu].filter((item) => item.id !== id);
+    setData({ ...data, [activeMenu]: updated });
   };
 
-  const handleAddOrEdit = (data) => {
-    const { type, item } = formData;
-
-    if (type === "patient") {
-      if (item) setPatients(patients.map(p => p.id === item.id ? { ...p, ...data } : p));
-      else setPatients([...patients, { id: Date.now(), ...data }]);
-    }
-
-    if (type === "doctor") {
-      if (item) setDoctors(doctors.map(d => d.id === item.id ? { ...d, ...data } : d));
-      else setDoctors([...doctors, { id: Date.now(), ...data }]);
-    }
-
-    if (type === "appointment") {
-      if (item) setAppointments(appointments.map(a => a.id === item.id ? { ...a, ...data } : a));
-      else setAppointments([...appointments, { id: Date.now(), status: "Scheduled", ...data }]);
-    }
-
-    if (type === "bill") {
-      if (item) setBills(bills.map(b => b.id === item.id ? { ...b, ...data } : b));
-      else setBills([...bills, { id: Date.now(), paymentStatus: "Pending", ...data }]);
-    }
-
-    closeForm();
+  // Handle edit (simulate edit)
+  const handleEdit = (id) => {
+    const updated = data[activeMenu].map((item) => {
+      if (item.id === id) {
+        return { ...item, edited: true };
+      }
+      return item;
+    });
+    setData({ ...data, [activeMenu]: updated });
   };
 
-  const deleteItem = (id, type) => {
-    if (type === "patient") setPatients(patients.filter(p => p.id !== id));
-    if (type === "doctor") setDoctors(doctors.filter(d => d.id !== id));
-    if (type === "appointment") setAppointments(appointments.filter(a => a.id !== id));
-    if (type === "bill") setBills(bills.filter(b => b.id !== id));
-  };
+  // Render table
+  const renderTable = () => {
+    const tableData = data[activeMenu];
+    if (!tableData || tableData.length === 0) return <p>No data available</p>;
 
-  const toggleStatus = (id, type) => {
-    if(type === "appointment") {
-      setAppointments(appointments.map(a => a.id === id ? {...a, status: a.status === "Scheduled" ? "Completed" : "Scheduled"} : a));
-    }
-    if(type === "bill") {
-      setBills(bills.map(b => b.id === id ? {...b, paymentStatus: b.paymentStatus === "Pending" ? "Paid" : "Pending"} : b));
-    }
+    const headers = Object.keys(tableData[0]).filter((h) => h !== "id" && h !== "edited");
+
+    return (
+      <table>
+        <thead>
+          <tr>
+            {headers.map((h) => (
+              <th key={h}>{h.toUpperCase()}</th>
+            ))}
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row) => (
+            <tr key={row.id} style={row.edited ? { backgroundColor: "#fff3cd" } : {}}>
+              {headers.map((h) => (
+                <td key={h}>{row[h]}</td>
+              ))}
+              <td>
+                <button className="edit" onClick={() => handleEdit(row.id)}>Edit</button>
+                <button className="delete" onClick={() => handleDelete(row.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   };
 
   return (
-    <div className="container">
-      <h1>Clinic Management Dashboard</h1>
-
-      <div className="tabs">
-        {["patients", "doctors", "appointments", "bills"].map(tab =>
-          <button
-            key={tab}
-            className={activeTab === tab ? "tab active" : "tab"}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab.toUpperCase()}
-          </button>
-        )}
-      </div>
-
-      <div className="content">
-        {/* Patients */}
-        {activeTab === "patients" && <>
-          <button className="add-btn" onClick={() => openForm("patient")}>+ Add Patient</button>
-          {patients.map(p =>
-            <div key={p.id} className="card">
-              {p.name} (Age: {p.age})
-              <div>
-                <button className="edit-btn" onClick={() => openForm("patient", p)}>Edit</button>
-                <button className="delete-btn" onClick={() => deleteItem(p.id, "patient")}>Delete</button>
-              </div>
+    <div className="App">
+      <div className="header">Clinic Management Dashboard</div>
+      <div className="dashboard">
+        {/* Sidebar */}
+        <div className="sidebar">
+          {Object.keys(data).map((menu) => (
+            <div
+              key={menu}
+              className={`menu-item ${activeMenu === menu ? "active" : ""}`}
+              onClick={() => setActiveMenu(menu)}
+            >
+              {menu}
             </div>
-          )}
-        </>}
-
-        {/* Doctors */}
-        {activeTab === "doctors" && <>
-          <button className="add-btn" onClick={() => openForm("doctor")}>+ Add Doctor</button>
-          {doctors.map(d =>
-            <div key={d.id} className="card">
-              Dr. {d.name} — {d.spec}
-              <div>
-                <button className="edit-btn" onClick={() => openForm("doctor", d)}>Edit</button>
-                <button className="delete-btn" onClick={() => deleteItem(d.id, "doctor")}>Delete</button>
-              </div>
-            </div>
-          )}
-        </>}
-
-        {/* Appointments */}
-        {activeTab === "appointments" && <>
-          <button className="add-btn" onClick={() => openForm("appointment")}>+ Add Appointment</button>
-          {appointments.map(a => {
-            const patient = patients.find(p => p.id === Number(a.patientId));
-            const doctor = doctors.find(d => d.id === Number(a.doctorId));
-            return (
-              <div key={a.id} className="card">
-                Patient: {patient ? patient.name : "Unknown"} | Doctor: {doctor ? doctor.name : "Unknown"} | Date: {a.date} | 
-                Status: <span className={`status-badge ${a.status.toLowerCase()}`}>{a.status}</span>
-                <div>
-                  <button className="edit-btn" onClick={() => openForm("appointment", a)}>Edit</button>
-                  <button className="edit-btn" onClick={() => toggleStatus(a.id, "appointment")}>Toggle Status</button>
-                  <button className="delete-btn" onClick={() => deleteItem(a.id, "appointment")}>Delete</button>
-                </div>
-              </div>
-            )
-          })}
-        </>}
-
-        {/* Bills */}
-        {activeTab === "bills" && <>
-          <button className="add-btn" onClick={() => openForm("bill")}>+ Generate Bill</button>
-          {bills.map(b => {
-            const app = appointments.find(a => a.id === Number(b.appId));
-            const patient = app ? patients.find(p => p.id === Number(app.patientId)) : null;
-            const doctor = app ? doctors.find(d => d.id === Number(app.doctorId)) : null;
-            return (
-              <div key={b.id} className="card">
-                Patient: {patient ? patient.name : "Unknown"} | Doctor: {doctor ? doctor.name : "Unknown"} | Amount: ₹{b.amount} | 
-                Status: <span className={`status-badge ${b.paymentStatus.toLowerCase()}`}>{b.paymentStatus}</span>
-                <div>
-                  <button className="edit-btn" onClick={() => openForm("bill", b)}>Edit</button>
-                  <button className="edit-btn" onClick={() => toggleStatus(b.id, "bill")}>Toggle Status</button>
-                  <button className="delete-btn" onClick={() => deleteItem(b.id, "bill")}>Delete</button>
-                </div>
-              </div>
-            )
-          })}
-        </>}
-      </div>
-
-      {/* Modal */}
-      {showForm && <FormModal
-        formData={formData}
-        closeForm={closeForm}
-        handleAddOrEdit={handleAddOrEdit}
-        patients={patients}
-        doctors={doctors}
-        appointments={appointments}
-      />}
-    </div>
-  );
-}
-
-// --- FORM MODAL COMPONENT ---
-function FormModal({ formData, closeForm, handleAddOrEdit, patients, doctors, appointments }) {
-  const { type, item } = formData;
-  const [data, setData] = useState(item || {});
-
-  const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); handleAddOrEdit(data); };
-
-  return (
-    <div className="modal">
-      <form className="modal-content" onSubmit={handleSubmit}>
-        <h2>{item ? "Edit" : "Add"} {type.charAt(0).toUpperCase() + type.slice(1)}</h2>
-
-        {(type === "patient" || type === "doctor") && <>
-          <input name="name" placeholder="Name" value={data.name || ""} onChange={handleChange} required />
-          {type === "patient" && <input name="age" placeholder="Age" type="number" value={data.age || ""} onChange={handleChange} required />}
-          {type === "doctor" && <input name="spec" placeholder="Specialization" value={data.spec || ""} onChange={handleChange} required />}
-        </>}
-
-        {type === "appointment" && <>
-          <select name="patientId" value={data.patientId || ""} onChange={handleChange} required>
-            <option value="">Select Patient</option>
-            {patients.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-          </select>
-          <select name="doctorId" value={data.doctorId || ""} onChange={handleChange} required>
-            <option value="">Select Doctor</option>
-            {doctors.map(d => <option key={d.id} value={d.id}>Dr. {d.name}</option>)}
-          </select>
-          <input name="date" type="date" value={data.date || ""} onChange={handleChange} required />
-        </>}
-
-        {type === "bill" && <>
-          <select name="appId" value={data.appId || ""} onChange={handleChange} required>
-            <option value="">Select Appointment</option>
-            {appointments.map(a => {
-              const patient = patients.find(p => p.id === Number(a.patientId));
-              const doctor = doctors.find(d => d.id === Number(a.doctorId));
-              return <option key={a.id} value={a.id}>{patient?.name} - Dr. {doctor?.name} ({a.date})</option>
-            })}
-          </select>
-          <input name="amount" type="number" placeholder="Amount" value={data.amount || ""} onChange={handleChange} required />
-        </>}
-
-        <div className="modal-buttons">
-          <button type="submit" className="add-btn">{item ? "Update" : "Add"}</button>
-          <button type="button" className="delete-btn" onClick={closeForm}>Cancel</button>
+          ))}
         </div>
-      </form>
+
+        {/* Main Content */}
+        <div className="main-content">
+          {/* Tabs */}
+          <div className="tabs">
+            {["Today", "Week", "Month"].map((tab) => (
+              <div
+                key={tab}
+                className={`tab ${activeTab === tab ? "active" : ""}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </div>
+            ))}
+          </div>
+
+          {/* Cards */}
+          <div className="card">
+            <h3>Upcoming Appointments</h3>
+            <p>{appointmentsCount} appointments</p>
+          </div>
+
+          <div className="card">
+            <h3>Patients Summary</h3>
+            <p>Total patients registered: {patientsCount}</p>
+          </div>
+
+          <div className="card">
+            <h3>Revenue</h3>
+            <p>${revenue.toLocaleString()} generated</p>
+          </div>
+
+          {/* Table / Main Section */}
+          <div className="card">
+            <h3>{activeMenu} Details</h3>
+            {renderTable()}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+
+export default App;
