@@ -37,25 +37,25 @@ function App() {
   // Card counts
   const [appointmentsCount, setAppointmentsCount] = useState(data.Appointments.length);
   const [patientsCount, setPatientsCount] = useState(data.Patients.length);
-  const [revenue, setRevenue] = useState(8500);
+  const [revenue, setRevenue] = useState(8500); // ✅ revenue now included
 
   // Simulate dynamic updates
   useEffect(() => {
     const interval = setInterval(() => {
       setAppointmentsCount(data.Appointments.length + Math.floor(Math.random() * 3));
       setPatientsCount(data.Patients.length + Math.floor(Math.random() * 3));
-      setRevenue(8500 + Math.floor(Math.random() * 1000));
+      setRevenue(8500 + Math.floor(Math.random() * 1000)); // ✅ revenue used
     }, 5000);
     return () => clearInterval(interval);
   }, [data]);
 
-  // Handle delete
+  // Handle delete row
   const handleDelete = (id) => {
     const updated = data[activeMenu].filter((item) => item.id !== id);
     setData({ ...data, [activeMenu]: updated });
   };
 
-  // Handle edit (simulate edit)
+  // Handle edit row
   const handleEdit = (id) => {
     const updated = data[activeMenu].map((item) => {
       if (item.id === id) {
@@ -64,6 +64,65 @@ function App() {
       return item;
     });
     setData({ ...data, [activeMenu]: updated });
+  };
+
+  // Handle action buttons
+  const handleAction = (label) => {
+    alert(`You clicked "${label}" button in ${activeMenu} tab`);
+  };
+
+  // Menu-specific cards and buttons, revenue included in Appointments
+  const menuConfig = {
+    Appointments: {
+      cards: [
+        { title: "Upcoming Appointments", value: appointmentsCount, icon: "📅" },
+        { title: "Revenue", value: `$${revenue.toLocaleString()}`, icon: "💰" }, // ✅ used revenue
+      ],
+      actions: [
+        { label: "Create Appointment", type: "create" },
+        { label: "Schedule Appointment", type: "schedule" },
+      ],
+    },
+    Patients: {
+      cards: [
+        { title: "Total Patients", value: patientsCount, icon: "🧑‍⚕️" },
+        { title: "New Patients", value: 2, icon: "🆕" },
+      ],
+      actions: [
+        { label: "Add Patient", type: "create" },
+        { label: "Import Patients", type: "schedule" },
+      ],
+    },
+    Doctors: {
+      cards: [
+        { title: "Total Doctors", value: data.Doctors.length, icon: "👨‍⚕️" },
+        { title: "Specialties", value: 3, icon: "💼" },
+      ],
+      actions: [
+        { label: "Add Doctor", type: "create" },
+        { label: "Assign Patients", type: "schedule" },
+      ],
+    },
+    Bills: {
+      cards: [
+        { title: "Total Bills", value: data.Bills.length, icon: "📄" },
+        { title: "Pending Payments", value: 1, icon: "⏳" },
+      ],
+      actions: [
+        { label: "Generate Bill", type: "create" },
+        { label: "Mark Paid", type: "schedule" },
+      ],
+    },
+    Reports: {
+      cards: [
+        { title: "Total Reports", value: data.Reports.length, icon: "📊" },
+        { title: "Monthly Reports", value: 2, icon: "🗓️" },
+      ],
+      actions: [
+        { label: "Generate Report", type: "create" },
+        { label: "Export Report", type: "schedule" },
+      ],
+    },
   };
 
   // Render table
@@ -140,38 +199,30 @@ function App() {
             ))}
           </div>
 
-          {/* Action buttons */}
+          {/* Action Buttons */}
           <div className="action-buttons">
-            <button className="create">Create Appointment</button>
-            <button className="schedule">Schedule Appointment</button>
-            <button className="create">Add Patient</button>
+            {menuConfig[activeMenu].actions.map((btn, idx) => (
+              <button
+                key={idx}
+                className={btn.type === "create" ? "create" : "schedule"}
+                onClick={() => handleAction(btn.label)}
+              >
+                {btn.label}
+              </button>
+            ))}
           </div>
 
           {/* Cards */}
           <div className="cards-container">
-            <div className="card appointments">
-              <div className="content">
-                <h3>Upcoming Appointments</h3>
-                <p>{appointmentsCount}</p>
+            {menuConfig[activeMenu].cards.map((card, idx) => (
+              <div key={idx} className={`card ${activeMenu.toLowerCase()}`}>
+                <div className="content">
+                  <h3>{card.title}</h3>
+                  <p>{card.value}</p>
+                </div>
+                <div className="icon">{card.icon}</div>
               </div>
-              <div className="icon">📅</div>
-            </div>
-
-            <div className="card patients">
-              <div className="content">
-                <h3>Patients Summary</h3>
-                <p>{patientsCount}</p>
-              </div>
-              <div className="icon">🧑‍⚕️</div>
-            </div>
-
-            <div className="card revenue">
-              <div className="content">
-                <h3>Revenue</h3>
-                <p>${revenue.toLocaleString()}</p>
-              </div>
-              <div className="icon">💰</div>
-            </div>
+            ))}
           </div>
 
           {/* Table / Main Section */}

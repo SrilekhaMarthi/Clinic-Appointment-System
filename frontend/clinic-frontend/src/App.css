@@ -8,6 +8,7 @@ html, body, #root {
   color: #333;
 }
 
+/* Header with user info */
 .header {
   height: 60px;
   background-color: #0d6efd;
@@ -35,12 +36,14 @@ html, body, #root {
   border: 2px solid #fff;
 }
 
+/* Dashboard layout */
 .dashboard {
   display: flex;
   height: calc(100% - 60px);
   overflow: hidden;
 }
 
+/* Sidebar menu */
 .sidebar {
   width: 220px;
   background-color: #fff;
@@ -67,6 +70,7 @@ html, body, #root {
   font-weight: bold;
 }
 
+/* Main content */
 .main-content {
   flex: 1;
   padding: 20px;
@@ -76,6 +80,7 @@ html, body, #root {
   gap: 20px;
 }
 
+/* Tabs at the top */
 .tabs {
   display: flex;
   gap: 12px;
@@ -126,7 +131,7 @@ html, body, #root {
   box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
-/* Card types */
+/* Card types for coloring */
 .card.appointments {
   background: linear-gradient(135deg, #0d6efd, #6fa8ff);
 }
@@ -135,8 +140,16 @@ html, body, #root {
   background: linear-gradient(135deg, #198754, #55c76b);
 }
 
-.card.revenue {
-  background: linear-gradient(135deg, #ffc107, #ffdb4d);
+.card.doctors {
+  background: linear-gradient(135deg, #6f42c1, #a679e8);
+}
+
+.card.bills {
+  background: linear-gradient(135deg, #fd7e14, #ffa94d);
+}
+
+.card.reports {
+  background: linear-gradient(135deg, #20c997, #63e6be);
 }
 
 /* Card content */
@@ -163,11 +176,12 @@ html, body, #root {
   opacity: 0.2;
 }
 
-/* Action buttons (create, schedule) */
+/* Action buttons */
 .action-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
 .action-buttons button {
@@ -200,6 +214,7 @@ html, body, #root {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 th, td {
@@ -216,6 +231,10 @@ th {
 button.edit {
   background-color: #ffc107;
   color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button.edit:hover {
@@ -225,12 +244,17 @@ button.edit:hover {
 button.delete {
   background-color: #dc3545;
   color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button.delete:hover {
   background-color: #bd2130;
 }
 
+/* Responsive layout */
 @media (max-width: 992px) {
   .dashboard {
     flex-direction: column;
@@ -251,9 +275,5 @@ button.delete:hover {
 
   .cards-container {
     flex-direction: column;
-  }
-
-  .action-buttons {
-    flex-wrap: wrap;
   }
 }
