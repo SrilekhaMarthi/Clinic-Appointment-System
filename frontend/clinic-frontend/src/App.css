@@ -1,0 +1,177 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  margin-right: 8px;
+  cursor: pointer;
+  background-color: #e5e7eb;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.tab:hover {
+  background-color: #d1d5db;
+}
+
+.tab.active {
+  background-color: #4f46e5;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.content .add-btn {
+  padding: 8px 16px;
+  margin-bottom: 15px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.content .add-btn:hover {
+  background-color: #059669;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.card {
+  padding: 14px 16px;
+  margin: 10px 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.1s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.delete-btn, .edit-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 6px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #dc2626;
+}
+
+.edit-btn {
+  background-color: #3b82f6;
+}
+
+.edit-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #111827;
+}
+
+.modal-content input, .modal-content select {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.modal-content input:focus, .modal-content select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 4px rgba(79,70,229,0.4);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-left: 6px;
+}
+
+/* Appointments */
+.status-badge.scheduled {
+  background-color: #3b82f6; /* blue */
+}
+.status-badge.completed {
+  background-color: #10b981; /* green */
+}
+
+/* Bills */
+.status-badge.pending {
+  background-color: #f59e0b; /* orange */
+}
+.status-badge.paid {
+  background-color: #10b981; /* green */
+}
