@@ -14,11 +14,25 @@ html, body, #root {
   color: white;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 20px;
   font-size: 1.25rem;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #fff;
 }
 
 .dashboard {
@@ -86,16 +100,100 @@ html, body, #root {
   font-weight: bold;
 }
 
+/* Cards container */
+.cards-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Individual cards */
 .card {
-  background-color: #fff;
-  border-radius: 10px;
+  flex: 1;
+  min-width: 250px;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease;
+  border-radius: 15px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Card types */
+.card.appointments {
+  background: linear-gradient(135deg, #0d6efd, #6fa8ff);
+}
+
+.card.patients {
+  background: linear-gradient(135deg, #198754, #55c76b);
+}
+
+.card.revenue {
+  background: linear-gradient(135deg, #ffc107, #ffdb4d);
+}
+
+/* Card content */
+.card .content {
+  display: flex;
+  flex-direction: column;
+}
+
+.card .content h3 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.card .content p {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.card .icon {
+  font-size: 2.5rem;
+  opacity: 0.2;
+}
+
+/* Action buttons (create, schedule) */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.action-buttons button {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.action-buttons button.create {
+  background-color: #0d6efd;
+}
+
+.action-buttons button.create:hover {
+  background-color: #0b5ed7;
+}
+
+.action-buttons button.schedule {
+  background-color: #198754;
+}
+
+.action-buttons button.schedule:hover {
+  background-color: #146c43;
 }
 
 /* Table styling */
@@ -114,16 +212,7 @@ th {
   background-color: #e9ecef;
 }
 
-button {
-  padding: 6px 12px;
-  margin-right: 5px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
+/* Buttons inside table */
 button.edit {
   background-color: #ffc107;
   color: #fff;
@@ -142,15 +231,6 @@ button.delete:hover {
   background-color: #bd2130;
 }
 
-button.update {
-  background-color: #198754;
-  color: #fff;
-}
-
-button.update:hover {
-  background-color: #146c43;
-}
-
 @media (max-width: 992px) {
   .dashboard {
     flex-direction: column;
@@ -167,5 +247,13 @@ button.update:hover {
   .menu-item {
     margin-bottom: 0;
     margin-right: 10px;
+  }
+
+  .cards-container {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
   }
 }

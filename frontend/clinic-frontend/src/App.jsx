@@ -102,7 +102,15 @@ function App() {
 
   return (
     <div className="App">
-      <div className="header">Clinic Management Dashboard</div>
+      {/* Header with user info */}
+      <div className="header">
+        Clinic Dashboard
+        <div className="user-info">
+          <img src="https://via.placeholder.com/35" alt="User Avatar" />
+          <span>Dr. Admin</span>
+        </div>
+      </div>
+
       <div className="dashboard">
         {/* Sidebar */}
         <div className="sidebar">
@@ -132,24 +140,42 @@ function App() {
             ))}
           </div>
 
+          {/* Action buttons */}
+          <div className="action-buttons">
+            <button className="create">Create Appointment</button>
+            <button className="schedule">Schedule Appointment</button>
+            <button className="create">Add Patient</button>
+          </div>
+
           {/* Cards */}
-          <div className="card">
-            <h3>Upcoming Appointments</h3>
-            <p>{appointmentsCount} appointments</p>
-          </div>
+          <div className="cards-container">
+            <div className="card appointments">
+              <div className="content">
+                <h3>Upcoming Appointments</h3>
+                <p>{appointmentsCount}</p>
+              </div>
+              <div className="icon">📅</div>
+            </div>
 
-          <div className="card">
-            <h3>Patients Summary</h3>
-            <p>Total patients registered: {patientsCount}</p>
-          </div>
+            <div className="card patients">
+              <div className="content">
+                <h3>Patients Summary</h3>
+                <p>{patientsCount}</p>
+              </div>
+              <div className="icon">🧑‍⚕️</div>
+            </div>
 
-          <div className="card">
-            <h3>Revenue</h3>
-            <p>${revenue.toLocaleString()} generated</p>
+            <div className="card revenue">
+              <div className="content">
+                <h3>Revenue</h3>
+                <p>${revenue.toLocaleString()}</p>
+              </div>
+              <div className="icon">💰</div>
+            </div>
           </div>
 
           {/* Table / Main Section */}
-          <div className="card">
+          <div className="card" style={{ color: "#333", backgroundColor: "#fff" }}>
             <h3>{activeMenu} Details</h3>
             {renderTable()}
           </div>
